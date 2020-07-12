@@ -11,5 +11,5 @@ I2C_Config_t init = {  // freq 1MHz
                        // bit rate 50KHz
 					   50000,
 					   // address
-					   0b00111010 
+					   0b0011101
 					                 };

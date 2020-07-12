@@ -12,17 +12,17 @@
 
 extern I2C_Config_t init;
 
-volatile uint8 received_data[100] = {0};
-volatile uint8 transmit_data[100] = {0};
-volatile uint8 received_data_size = 0;
-volatile uint8 Transmit_data_size = 0;
+extern volatile uint8 received_data[100];
+extern volatile uint8 transmit_data[100];
+extern volatile uint8 received_data_size;
+extern volatile uint8 Transmit_data_size;
 
 
 volatile uint8 index2 = 0;
 
 bool I2C_init() {
 	// set address
-	TWAR = init.address;
+	TWAR = init.address << 1;
 	// set bit rate
 	TWBR = (init.freq - (init.bit_rate * 16)) / (init.bit_rate * 2);
 	// enable I2C
@@ -44,6 +44,8 @@ bool I2C_init() {
 }
 
 bool I2C_MasterTransmit(const uint8 slave_address) {
+	// wait for the slave to be ready this time depends on the application
+	_delay_ms(100);
 	uint8 counter = 0;
 	// check if no data to transmit
 	if (Transmit_data_size <= 0) {
@@ -97,6 +99,8 @@ bool I2C_MasterTransmit(const uint8 slave_address) {
 
 
 bool I2C_MasterReceive(const uint8 slave_address) {
+	// wait for the slave to be ready this time depends on the application
+	_delay_ms(100);	
 	uint8 counter = 0;
 	TWDR = 0x00;
 	TWCR = 0x00;	
@@ -167,6 +171,11 @@ bool I2C_MasterReceive(const uint8 slave_address) {
 	return SUCCESS;
 }
 
+void I2C_SendData(uint8 data)
+{
+	TWDR = data;
+}
+
 ISR(TWI_vect) {
 	// disable interrupt for I2C
 	CLR_BIT(TWCR, 0);
@@ -191,25 +200,12 @@ ISR(TWI_vect) {
 			break;
 		// transmit data	
 		case 0xA8:
-				TWDR = 3;
-				// clear flag
-				SET_BIT(TWCR, 7);
-				// enable I2C
-				SET_BIT(TWCR, 2);	
-				while (GET_BIT(TWCR, 7) == 0);
-				if ((TWSR & 0xF8) == 0xC0) {
-					SET_BIT(PORTA, 2);
-				} else {
-					SET_BIT(PORTD, 2);
-				}
-#if 0		
-			// send the first byte
-			TWDR = transmit_data[index2];
+			// send the first byte as 0 
+			TWDR = 0;
+			// clear flag
 			SET_BIT(TWCR, 7);
 			// wait until the flag is set
 			while (GET_BIT(TWCR, 7) == 0);
-			Transmit_data_size--;
-			index2++;
 			// send the remaining data
 			while (((TWSR & 0xF8) == 0xB8) && Transmit_data_size > 0) {
 				TWDR = transmit_data[index2];
@@ -219,11 +215,8 @@ ISR(TWI_vect) {
 				SET_BIT(TWCR, 7);
 				// wait until the flag is set
 				while (GET_BIT(TWCR, 7) == 0);				
-			}
-			// clear flag
-			SET_BIT(TWCR, 7);	
-			index2 = 0;	
-#endif			
+			}	
+			index2 = 0;			
 			// clear flag
 			SET_BIT(TWCR, 7);			
 			break;	
@@ -233,3 +226,6 @@ ISR(TWI_vect) {
 	// enable interrupt
 	SET_BIT(TWCR, 0);
 }
+
+
+
