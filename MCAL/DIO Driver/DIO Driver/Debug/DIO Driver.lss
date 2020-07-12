@@ -1,0 +1,1065 @@
+
+DIO Driver.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000492  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         00000030  00800060  00000492  00000506  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000536  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000568  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000080  00000000  00000000  000005a4  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000eb5  00000000  00000000  00000624  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 000007ec  00000000  00000000  000014d9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   00000630  00000000  00000000  00001cc5  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000d0  00000000  00000000  000022f8  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00003165  00000000  00000000  000023c8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    000009ee  00000000  00000000  0000552d  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000080  00000000  00000000  00005f1b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 12 .debug_macro  00000c1c  00000000  00000000  00005f9b  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   8:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  10:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  14:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  18:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  1c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  20:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  24:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  28:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  2c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  30:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  34:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  38:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  3c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  40:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  44:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  48:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  4c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  50:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	e2 e9       	ldi	r30, 0x92	; 146
+  68:	f4 e0       	ldi	r31, 0x04	; 4
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+  70:	a0 39       	cpi	r26, 0x90	; 144
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
+  76:	0e 94 0e 02 	call	0x41c	; 0x41c <main>
+  7a:	0c 94 47 02 	jmp	0x48e	; 0x48e <_exit>
+
+0000007e <__bad_interrupt>:
+  7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000082 <Dio_init>:
+#include "StdTypes.h"
+#include "Registers.h"
+#include "Dio.h"
+	
+/* initialization function */	
+bool Dio_init(Dio_Config_t *init) {	
+  82:	cf 92       	push	r12
+  84:	df 92       	push	r13
+  86:	ef 92       	push	r14
+  88:	ff 92       	push	r15
+  8a:	0f 93       	push	r16
+  8c:	1f 93       	push	r17
+  8e:	cf 93       	push	r28
+  90:	df 93       	push	r29
+  92:	ac 01       	movw	r20, r24
+  94:	6c 01       	movw	r12, r24
+  96:	8c 01       	movw	r16, r24
+  98:	02 5e       	subi	r16, 0xE2	; 226
+  9a:	1f 4f       	sbci	r17, 0xFF	; 255
+  9c:	fc 01       	movw	r30, r24
+			} else {
+				status = ERROR;
+				return status;
+			}
+		} else if (init->pins_config[i].direction == OUTPUT) {
+			*(init->pins_config[i].ddr) |= (1 << init->pins_config[i].channel_num);
+  9e:	61 e0       	ldi	r22, 0x01	; 1
+  a0:	70 e0       	ldi	r23, 0x00	; 0
+/* initialization function */	
+bool Dio_init(Dio_Config_t *init) {	
+	bool status = SUCCESS;
+	/* configuration of pins */
+	for (int i = 0; i < NUM_OF_CHANNELS; i++) {
+		if (init->pins_config[i].direction == INPUT) {
+  a2:	80 81       	ld	r24, Z
+  a4:	81 11       	cpse	r24, r1
+  a6:	33 c0       	rjmp	.+102    	; 0x10e <Dio_init+0x8c>
+			*(init->pins_config[i].ddr) &= ~(1 << init->pins_config[i].channel_num); 
+  a8:	e4 80       	ldd	r14, Z+4	; 0x04
+  aa:	f5 80       	ldd	r15, Z+5	; 0x05
+  ac:	e7 01       	movw	r28, r14
+  ae:	98 81       	ld	r25, Y
+  b0:	9b 01       	movw	r18, r22
+  b2:	01 80       	ldd	r0, Z+1	; 0x01
+  b4:	02 c0       	rjmp	.+4      	; 0xba <Dio_init+0x38>
+  b6:	22 0f       	add	r18, r18
+  b8:	33 1f       	adc	r19, r19
+  ba:	0a 94       	dec	r0
+  bc:	e2 f7       	brpl	.-8      	; 0xb6 <Dio_init+0x34>
+  be:	82 2f       	mov	r24, r18
+  c0:	80 95       	com	r24
+  c2:	89 23       	and	r24, r25
+  c4:	88 83       	st	Y, r24
+			if (init->pins_config[i].pull_up == PULL_UP) {
+  c6:	82 81       	ldd	r24, Z+2	; 0x02
+  c8:	81 11       	cpse	r24, r1
+  ca:	0e c0       	rjmp	.+28     	; 0xe8 <Dio_init+0x66>
+				*(init->pins_config[i].port) |= (1 << init->pins_config[i].channel_num); 
+  cc:	26 81       	ldd	r18, Z+6	; 0x06
+  ce:	37 81       	ldd	r19, Z+7	; 0x07
+  d0:	e9 01       	movw	r28, r18
+  d2:	f8 80       	ld	r15, Y
+  d4:	cb 01       	movw	r24, r22
+  d6:	01 80       	ldd	r0, Z+1	; 0x01
+  d8:	02 c0       	rjmp	.+4      	; 0xde <Dio_init+0x5c>
+  da:	88 0f       	add	r24, r24
+  dc:	99 1f       	adc	r25, r25
+  de:	0a 94       	dec	r0
+  e0:	e2 f7       	brpl	.-8      	; 0xda <Dio_init+0x58>
+  e2:	8f 29       	or	r24, r15
+  e4:	88 83       	st	Y, r24
+  e6:	32 c0       	rjmp	.+100    	; 0x14c <Dio_init+0xca>
+			} else if (init->pins_config[i].pull_up == NO_PULL_UP) {
+  e8:	81 30       	cpi	r24, 0x01	; 1
+  ea:	09 f0       	breq	.+2      	; 0xee <Dio_init+0x6c>
+  ec:	5e c0       	rjmp	.+188    	; 0x1aa <Dio_init+0x128>
+				*(init->pins_config[i].port) &= ~(1 << init->pins_config[i].channel_num); 
+  ee:	e6 80       	ldd	r14, Z+6	; 0x06
+  f0:	f7 80       	ldd	r15, Z+7	; 0x07
+  f2:	e7 01       	movw	r28, r14
+  f4:	98 81       	ld	r25, Y
+  f6:	9b 01       	movw	r18, r22
+  f8:	01 80       	ldd	r0, Z+1	; 0x01
+  fa:	02 c0       	rjmp	.+4      	; 0x100 <Dio_init+0x7e>
+  fc:	22 0f       	add	r18, r18
+  fe:	33 1f       	adc	r19, r19
+ 100:	0a 94       	dec	r0
+ 102:	e2 f7       	brpl	.-8      	; 0xfc <Dio_init+0x7a>
+ 104:	82 2f       	mov	r24, r18
+ 106:	80 95       	com	r24
+ 108:	89 23       	and	r24, r25
+ 10a:	88 83       	st	Y, r24
+ 10c:	1f c0       	rjmp	.+62     	; 0x14c <Dio_init+0xca>
+			} else {
+				status = ERROR;
+				return status;
+			}
+		} else if (init->pins_config[i].direction == OUTPUT) {
+ 10e:	81 30       	cpi	r24, 0x01	; 1
+ 110:	09 f0       	breq	.+2      	; 0x114 <Dio_init+0x92>
+ 112:	4d c0       	rjmp	.+154    	; 0x1ae <Dio_init+0x12c>
+			*(init->pins_config[i].ddr) |= (1 << init->pins_config[i].channel_num);
+ 114:	24 81       	ldd	r18, Z+4	; 0x04
+ 116:	35 81       	ldd	r19, Z+5	; 0x05
+ 118:	e9 01       	movw	r28, r18
+ 11a:	f8 80       	ld	r15, Y
+ 11c:	cb 01       	movw	r24, r22
+ 11e:	01 80       	ldd	r0, Z+1	; 0x01
+ 120:	02 c0       	rjmp	.+4      	; 0x126 <Dio_init+0xa4>
+ 122:	88 0f       	add	r24, r24
+ 124:	99 1f       	adc	r25, r25
+ 126:	0a 94       	dec	r0
+ 128:	e2 f7       	brpl	.-8      	; 0x122 <Dio_init+0xa0>
+ 12a:	8f 29       	or	r24, r15
+ 12c:	88 83       	st	Y, r24
+			*(init->pins_config[i].port) |= (init->pins_config[i].init_value << init->pins_config[i].channel_num);			 
+ 12e:	e6 80       	ldd	r14, Z+6	; 0x06
+ 130:	f7 80       	ldd	r15, Z+7	; 0x07
+ 132:	e7 01       	movw	r28, r14
+ 134:	88 81       	ld	r24, Y
+ 136:	93 81       	ldd	r25, Z+3	; 0x03
+ 138:	29 2f       	mov	r18, r25
+ 13a:	30 e0       	ldi	r19, 0x00	; 0
+ 13c:	01 80       	ldd	r0, Z+1	; 0x01
+ 13e:	02 c0       	rjmp	.+4      	; 0x144 <Dio_init+0xc2>
+ 140:	22 0f       	add	r18, r18
+ 142:	33 1f       	adc	r19, r19
+ 144:	0a 94       	dec	r0
+ 146:	e2 f7       	brpl	.-8      	; 0x140 <Dio_init+0xbe>
+ 148:	28 2b       	or	r18, r24
+ 14a:	28 83       	st	Y, r18
+ 14c:	3a 96       	adiw	r30, 0x0a	; 10
+	
+/* initialization function */	
+bool Dio_init(Dio_Config_t *init) {	
+	bool status = SUCCESS;
+	/* configuration of pins */
+	for (int i = 0; i < NUM_OF_CHANNELS; i++) {
+ 14e:	e0 17       	cp	r30, r16
+ 150:	f1 07       	cpc	r31, r17
+ 152:	09 f0       	breq	.+2      	; 0x156 <Dio_init+0xd4>
+ 154:	a6 cf       	rjmp	.-180    	; 0xa2 <Dio_init+0x20>
+ 156:	4e 5e       	subi	r20, 0xEE	; 238
+ 158:	5f 4f       	sbci	r21, 0xFF	; 255
+				} else {
+				status = ERROR;
+				return status;
+			}
+			} else if (init->port_config[i].direction == OUTPUT) {
+			*(init->port_config[i].ddr) = 0xFF;
+ 15a:	2f ef       	ldi	r18, 0xFF	; 255
+ 15c:	f6 01       	movw	r30, r12
+			return status;
+		}
+	}
+	/* configuration of ports */
+	for (int i = 0; i < NUM_OF_PORTS; i++) {
+		if (init->port_config[i].direction == INPUT) {
+ 15e:	96 8d       	ldd	r25, Z+30	; 0x1e
+ 160:	91 11       	cpse	r25, r1
+ 162:	12 c0       	rjmp	.+36     	; 0x188 <Dio_init+0x106>
+			*(init->port_config[i].ddr) = 0x00;
+ 164:	a1 a1       	ldd	r26, Z+33	; 0x21
+ 166:	b2 a1       	ldd	r27, Z+34	; 0x22
+ 168:	1c 92       	st	X, r1
+			if (init->port_config[i].pull_up == PULL_UP) {
+ 16a:	87 8d       	ldd	r24, Z+31	; 0x1f
+ 16c:	81 11       	cpse	r24, r1
+ 16e:	05 c0       	rjmp	.+10     	; 0x17a <Dio_init+0xf8>
+				*(init->port_config[i].port) = 0xFF;
+ 170:	03 a0       	ldd	r0, Z+35	; 0x23
+ 172:	f4 a1       	ldd	r31, Z+36	; 0x24
+ 174:	e0 2d       	mov	r30, r0
+ 176:	20 83       	st	Z, r18
+ 178:	10 c0       	rjmp	.+32     	; 0x19a <Dio_init+0x118>
+				} else if (init->port_config[i].pull_up == NO_PULL_UP) {
+ 17a:	81 30       	cpi	r24, 0x01	; 1
+ 17c:	d1 f4       	brne	.+52     	; 0x1b2 <Dio_init+0x130>
+				*(init->port_config[i].port) = 0x00;
+ 17e:	03 a0       	ldd	r0, Z+35	; 0x23
+ 180:	f4 a1       	ldd	r31, Z+36	; 0x24
+ 182:	e0 2d       	mov	r30, r0
+ 184:	10 82       	st	Z, r1
+ 186:	09 c0       	rjmp	.+18     	; 0x19a <Dio_init+0x118>
+				} else {
+				status = ERROR;
+				return status;
+			}
+			} else if (init->port_config[i].direction == OUTPUT) {
+ 188:	91 30       	cpi	r25, 0x01	; 1
+ 18a:	a9 f4       	brne	.+42     	; 0x1b6 <Dio_init+0x134>
+			*(init->port_config[i].ddr) = 0xFF;
+ 18c:	a1 a1       	ldd	r26, Z+33	; 0x21
+ 18e:	b2 a1       	ldd	r27, Z+34	; 0x22
+ 190:	2c 93       	st	X, r18
+			*(init->port_config[i].port) = init->port_config[i].init_value;
+ 192:	a3 a1       	ldd	r26, Z+35	; 0x23
+ 194:	b4 a1       	ldd	r27, Z+36	; 0x24
+ 196:	80 a1       	ldd	r24, Z+32	; 0x20
+ 198:	8c 93       	st	X, r24
+ 19a:	d9 e0       	ldi	r29, 0x09	; 9
+ 19c:	cd 0e       	add	r12, r29
+ 19e:	d1 1c       	adc	r13, r1
+			status = ERROR;
+			return status;
+		}
+	}
+	/* configuration of ports */
+	for (int i = 0; i < NUM_OF_PORTS; i++) {
+ 1a0:	c4 16       	cp	r12, r20
+ 1a2:	d5 06       	cpc	r13, r21
+ 1a4:	d9 f6       	brne	.-74     	; 0x15c <Dio_init+0xda>
+			} else {
+			status = ERROR;
+			return status;
+		}		
+	}		
+	return status;
+ 1a6:	80 e0       	ldi	r24, 0x00	; 0
+ 1a8:	07 c0       	rjmp	.+14     	; 0x1b8 <Dio_init+0x136>
+				*(init->pins_config[i].port) |= (1 << init->pins_config[i].channel_num); 
+			} else if (init->pins_config[i].pull_up == NO_PULL_UP) {
+				*(init->pins_config[i].port) &= ~(1 << init->pins_config[i].channel_num); 
+			} else {
+				status = ERROR;
+				return status;
+ 1aa:	81 e0       	ldi	r24, 0x01	; 1
+ 1ac:	05 c0       	rjmp	.+10     	; 0x1b8 <Dio_init+0x136>
+		} else if (init->pins_config[i].direction == OUTPUT) {
+			*(init->pins_config[i].ddr) |= (1 << init->pins_config[i].channel_num);
+			*(init->pins_config[i].port) |= (init->pins_config[i].init_value << init->pins_config[i].channel_num);			 
+		} else {
+			status = ERROR;
+			return status;
+ 1ae:	81 e0       	ldi	r24, 0x01	; 1
+ 1b0:	03 c0       	rjmp	.+6      	; 0x1b8 <Dio_init+0x136>
+				*(init->port_config[i].port) = 0xFF;
+				} else if (init->port_config[i].pull_up == NO_PULL_UP) {
+				*(init->port_config[i].port) = 0x00;
+				} else {
+				status = ERROR;
+				return status;
+ 1b2:	81 e0       	ldi	r24, 0x01	; 1
+ 1b4:	01 c0       	rjmp	.+2      	; 0x1b8 <Dio_init+0x136>
+			} else if (init->port_config[i].direction == OUTPUT) {
+			*(init->port_config[i].ddr) = 0xFF;
+			*(init->port_config[i].port) = init->port_config[i].init_value;
+			} else {
+			status = ERROR;
+			return status;
+ 1b6:	81 e0       	ldi	r24, 0x01	; 1
+		}		
+	}		
+	return status;
+}
+ 1b8:	df 91       	pop	r29
+ 1ba:	cf 91       	pop	r28
+ 1bc:	1f 91       	pop	r17
+ 1be:	0f 91       	pop	r16
+ 1c0:	ff 90       	pop	r15
+ 1c2:	ef 90       	pop	r14
+ 1c4:	df 90       	pop	r13
+ 1c6:	cf 90       	pop	r12
+ 1c8:	08 95       	ret
+
+000001ca <Dio_Read_pin>:
+
+/* read the status of a specific pin */
+bool Dio_Read_pin(Pin_type pin_num, Port_t port_name, Data_t* location) {
+	/* check for error input */
+	if (pin_num < 0 || pin_num > 7) {
+ 1ca:	88 30       	cpi	r24, 0x08	; 8
+ 1cc:	08 f0       	brcs	.+2      	; 0x1d0 <Dio_Read_pin+0x6>
+ 1ce:	61 c0       	rjmp	.+194    	; 0x292 <Dio_Read_pin+0xc8>
+		return ERROR;
+	}
+	switch (port_name) {
+ 1d0:	61 30       	cpi	r22, 0x01	; 1
+ 1d2:	e9 f0       	breq	.+58     	; 0x20e <Dio_Read_pin+0x44>
+ 1d4:	30 f0       	brcs	.+12     	; 0x1e2 <Dio_Read_pin+0x18>
+ 1d6:	62 30       	cpi	r22, 0x02	; 2
+ 1d8:	81 f1       	breq	.+96     	; 0x23a <Dio_Read_pin+0x70>
+ 1da:	63 30       	cpi	r22, 0x03	; 3
+ 1dc:	09 f4       	brne	.+2      	; 0x1e0 <Dio_Read_pin+0x16>
+ 1de:	43 c0       	rjmp	.+134    	; 0x266 <Dio_Read_pin+0x9c>
+ 1e0:	5a c0       	rjmp	.+180    	; 0x296 <Dio_Read_pin+0xcc>
+	case A:
+		*location = ((PINA & (1 << pin_num)) >> pin_num);
+ 1e2:	69 b3       	in	r22, 0x19	; 25
+ 1e4:	21 e0       	ldi	r18, 0x01	; 1
+ 1e6:	30 e0       	ldi	r19, 0x00	; 0
+ 1e8:	08 2e       	mov	r0, r24
+ 1ea:	02 c0       	rjmp	.+4      	; 0x1f0 <Dio_Read_pin+0x26>
+ 1ec:	22 0f       	add	r18, r18
+ 1ee:	33 1f       	adc	r19, r19
+ 1f0:	0a 94       	dec	r0
+ 1f2:	e2 f7       	brpl	.-8      	; 0x1ec <Dio_Read_pin+0x22>
+ 1f4:	70 e0       	ldi	r23, 0x00	; 0
+ 1f6:	26 23       	and	r18, r22
+ 1f8:	37 23       	and	r19, r23
+ 1fa:	b9 01       	movw	r22, r18
+ 1fc:	02 c0       	rjmp	.+4      	; 0x202 <Dio_Read_pin+0x38>
+ 1fe:	75 95       	asr	r23
+ 200:	67 95       	ror	r22
+ 202:	8a 95       	dec	r24
+ 204:	e2 f7       	brpl	.-8      	; 0x1fe <Dio_Read_pin+0x34>
+ 206:	fa 01       	movw	r30, r20
+ 208:	60 83       	st	Z, r22
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 20a:	80 e0       	ldi	r24, 0x00	; 0
+		return ERROR;
+	}
+	switch (port_name) {
+	case A:
+		*location = ((PINA & (1 << pin_num)) >> pin_num);
+		break;
+ 20c:	08 95       	ret
+	case B:
+		*location = ((PINB & (1 << pin_num)) >> pin_num);
+ 20e:	66 b3       	in	r22, 0x16	; 22
+ 210:	21 e0       	ldi	r18, 0x01	; 1
+ 212:	30 e0       	ldi	r19, 0x00	; 0
+ 214:	08 2e       	mov	r0, r24
+ 216:	02 c0       	rjmp	.+4      	; 0x21c <Dio_Read_pin+0x52>
+ 218:	22 0f       	add	r18, r18
+ 21a:	33 1f       	adc	r19, r19
+ 21c:	0a 94       	dec	r0
+ 21e:	e2 f7       	brpl	.-8      	; 0x218 <Dio_Read_pin+0x4e>
+ 220:	70 e0       	ldi	r23, 0x00	; 0
+ 222:	26 23       	and	r18, r22
+ 224:	37 23       	and	r19, r23
+ 226:	b9 01       	movw	r22, r18
+ 228:	02 c0       	rjmp	.+4      	; 0x22e <Dio_Read_pin+0x64>
+ 22a:	75 95       	asr	r23
+ 22c:	67 95       	ror	r22
+ 22e:	8a 95       	dec	r24
+ 230:	e2 f7       	brpl	.-8      	; 0x22a <Dio_Read_pin+0x60>
+ 232:	fa 01       	movw	r30, r20
+ 234:	60 83       	st	Z, r22
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 236:	80 e0       	ldi	r24, 0x00	; 0
+	case A:
+		*location = ((PINA & (1 << pin_num)) >> pin_num);
+		break;
+	case B:
+		*location = ((PINB & (1 << pin_num)) >> pin_num);
+		break;
+ 238:	08 95       	ret
+	case C:
+		*location = ((PINC & (1 << pin_num)) >> pin_num);
+ 23a:	63 b3       	in	r22, 0x13	; 19
+ 23c:	21 e0       	ldi	r18, 0x01	; 1
+ 23e:	30 e0       	ldi	r19, 0x00	; 0
+ 240:	08 2e       	mov	r0, r24
+ 242:	02 c0       	rjmp	.+4      	; 0x248 <Dio_Read_pin+0x7e>
+ 244:	22 0f       	add	r18, r18
+ 246:	33 1f       	adc	r19, r19
+ 248:	0a 94       	dec	r0
+ 24a:	e2 f7       	brpl	.-8      	; 0x244 <Dio_Read_pin+0x7a>
+ 24c:	70 e0       	ldi	r23, 0x00	; 0
+ 24e:	26 23       	and	r18, r22
+ 250:	37 23       	and	r19, r23
+ 252:	b9 01       	movw	r22, r18
+ 254:	02 c0       	rjmp	.+4      	; 0x25a <Dio_Read_pin+0x90>
+ 256:	75 95       	asr	r23
+ 258:	67 95       	ror	r22
+ 25a:	8a 95       	dec	r24
+ 25c:	e2 f7       	brpl	.-8      	; 0x256 <Dio_Read_pin+0x8c>
+ 25e:	fa 01       	movw	r30, r20
+ 260:	60 83       	st	Z, r22
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 262:	80 e0       	ldi	r24, 0x00	; 0
+	case B:
+		*location = ((PINB & (1 << pin_num)) >> pin_num);
+		break;
+	case C:
+		*location = ((PINC & (1 << pin_num)) >> pin_num);
+		break;
+ 264:	08 95       	ret
+	case D:
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+ 266:	60 b3       	in	r22, 0x10	; 16
+ 268:	21 e0       	ldi	r18, 0x01	; 1
+ 26a:	30 e0       	ldi	r19, 0x00	; 0
+ 26c:	08 2e       	mov	r0, r24
+ 26e:	02 c0       	rjmp	.+4      	; 0x274 <Dio_Read_pin+0xaa>
+ 270:	22 0f       	add	r18, r18
+ 272:	33 1f       	adc	r19, r19
+ 274:	0a 94       	dec	r0
+ 276:	e2 f7       	brpl	.-8      	; 0x270 <Dio_Read_pin+0xa6>
+ 278:	70 e0       	ldi	r23, 0x00	; 0
+ 27a:	26 23       	and	r18, r22
+ 27c:	37 23       	and	r19, r23
+ 27e:	b9 01       	movw	r22, r18
+ 280:	02 c0       	rjmp	.+4      	; 0x286 <Dio_Read_pin+0xbc>
+ 282:	75 95       	asr	r23
+ 284:	67 95       	ror	r22
+ 286:	8a 95       	dec	r24
+ 288:	e2 f7       	brpl	.-8      	; 0x282 <Dio_Read_pin+0xb8>
+ 28a:	fa 01       	movw	r30, r20
+ 28c:	60 83       	st	Z, r22
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 28e:	80 e0       	ldi	r24, 0x00	; 0
+	case C:
+		*location = ((PINC & (1 << pin_num)) >> pin_num);
+		break;
+	case D:
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+		break;
+ 290:	08 95       	ret
+
+/* read the status of a specific pin */
+bool Dio_Read_pin(Pin_type pin_num, Port_t port_name, Data_t* location) {
+	/* check for error input */
+	if (pin_num < 0 || pin_num > 7) {
+		return ERROR;
+ 292:	81 e0       	ldi	r24, 0x01	; 1
+ 294:	08 95       	ret
+		break;
+	case D:
+		*location = ((PIND & (1 << pin_num)) >> pin_num);
+		break;
+	default:
+		return ERROR;					
+ 296:	81 e0       	ldi	r24, 0x01	; 1
+	}
+	return SUCCESS;
+}
+ 298:	08 95       	ret
+
+0000029a <Dio_Write_pin>:
+/* change the status of a specific pin */
+bool Dio_Write_pin(Pin_type pin_num, Port_t port_name, Data_t value) {
+	/* check for error input */
+	if (pin_num < 0 || pin_num > 7) {
+ 29a:	88 30       	cpi	r24, 0x08	; 8
+ 29c:	08 f0       	brcs	.+2      	; 0x2a0 <Dio_Write_pin+0x6>
+ 29e:	86 c0       	rjmp	.+268    	; 0x3ac <Dio_Write_pin+0x112>
+		return ERROR;
+	}
+
+	switch (port_name) {
+ 2a0:	61 30       	cpi	r22, 0x01	; 1
+ 2a2:	39 f1       	breq	.+78     	; 0x2f2 <Dio_Write_pin+0x58>
+ 2a4:	38 f0       	brcs	.+14     	; 0x2b4 <Dio_Write_pin+0x1a>
+ 2a6:	62 30       	cpi	r22, 0x02	; 2
+ 2a8:	09 f4       	brne	.+2      	; 0x2ac <Dio_Write_pin+0x12>
+ 2aa:	42 c0       	rjmp	.+132    	; 0x330 <Dio_Write_pin+0x96>
+ 2ac:	63 30       	cpi	r22, 0x03	; 3
+ 2ae:	09 f4       	brne	.+2      	; 0x2b2 <Dio_Write_pin+0x18>
+ 2b0:	5e c0       	rjmp	.+188    	; 0x36e <Dio_Write_pin+0xd4>
+ 2b2:	7e c0       	rjmp	.+252    	; 0x3b0 <Dio_Write_pin+0x116>
+	case A:
+		if (value) {
+ 2b4:	44 23       	and	r20, r20
+ 2b6:	71 f0       	breq	.+28     	; 0x2d4 <Dio_Write_pin+0x3a>
+			PORTA |= (1 << pin_num);
+ 2b8:	4b b3       	in	r20, 0x1b	; 27
+ 2ba:	21 e0       	ldi	r18, 0x01	; 1
+ 2bc:	30 e0       	ldi	r19, 0x00	; 0
+ 2be:	b9 01       	movw	r22, r18
+ 2c0:	02 c0       	rjmp	.+4      	; 0x2c6 <Dio_Write_pin+0x2c>
+ 2c2:	66 0f       	add	r22, r22
+ 2c4:	77 1f       	adc	r23, r23
+ 2c6:	8a 95       	dec	r24
+ 2c8:	e2 f7       	brpl	.-8      	; 0x2c2 <Dio_Write_pin+0x28>
+ 2ca:	cb 01       	movw	r24, r22
+ 2cc:	84 2b       	or	r24, r20
+ 2ce:	8b bb       	out	0x1b, r24	; 27
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 2d0:	80 e0       	ldi	r24, 0x00	; 0
+ 2d2:	08 95       	ret
+	switch (port_name) {
+	case A:
+		if (value) {
+			PORTA |= (1 << pin_num);
+		} else {
+			PORTA &= ~(1 << pin_num);
+ 2d4:	4b b3       	in	r20, 0x1b	; 27
+ 2d6:	21 e0       	ldi	r18, 0x01	; 1
+ 2d8:	30 e0       	ldi	r19, 0x00	; 0
+ 2da:	b9 01       	movw	r22, r18
+ 2dc:	02 c0       	rjmp	.+4      	; 0x2e2 <Dio_Write_pin+0x48>
+ 2de:	66 0f       	add	r22, r22
+ 2e0:	77 1f       	adc	r23, r23
+ 2e2:	8a 95       	dec	r24
+ 2e4:	e2 f7       	brpl	.-8      	; 0x2de <Dio_Write_pin+0x44>
+ 2e6:	cb 01       	movw	r24, r22
+ 2e8:	80 95       	com	r24
+ 2ea:	84 23       	and	r24, r20
+ 2ec:	8b bb       	out	0x1b, r24	; 27
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 2ee:	80 e0       	ldi	r24, 0x00	; 0
+ 2f0:	08 95       	ret
+		} else {
+			PORTA &= ~(1 << pin_num);
+		}	
+		break;
+	case B:
+		if (value) {
+ 2f2:	44 23       	and	r20, r20
+ 2f4:	71 f0       	breq	.+28     	; 0x312 <Dio_Write_pin+0x78>
+			PORTB |= (1 << pin_num);
+ 2f6:	48 b3       	in	r20, 0x18	; 24
+ 2f8:	21 e0       	ldi	r18, 0x01	; 1
+ 2fa:	30 e0       	ldi	r19, 0x00	; 0
+ 2fc:	b9 01       	movw	r22, r18
+ 2fe:	02 c0       	rjmp	.+4      	; 0x304 <Dio_Write_pin+0x6a>
+ 300:	66 0f       	add	r22, r22
+ 302:	77 1f       	adc	r23, r23
+ 304:	8a 95       	dec	r24
+ 306:	e2 f7       	brpl	.-8      	; 0x300 <Dio_Write_pin+0x66>
+ 308:	cb 01       	movw	r24, r22
+ 30a:	84 2b       	or	r24, r20
+ 30c:	88 bb       	out	0x18, r24	; 24
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 30e:	80 e0       	ldi	r24, 0x00	; 0
+ 310:	08 95       	ret
+		break;
+	case B:
+		if (value) {
+			PORTB |= (1 << pin_num);
+			} else {
+			PORTB &= ~(1 << pin_num);
+ 312:	48 b3       	in	r20, 0x18	; 24
+ 314:	21 e0       	ldi	r18, 0x01	; 1
+ 316:	30 e0       	ldi	r19, 0x00	; 0
+ 318:	b9 01       	movw	r22, r18
+ 31a:	02 c0       	rjmp	.+4      	; 0x320 <Dio_Write_pin+0x86>
+ 31c:	66 0f       	add	r22, r22
+ 31e:	77 1f       	adc	r23, r23
+ 320:	8a 95       	dec	r24
+ 322:	e2 f7       	brpl	.-8      	; 0x31c <Dio_Write_pin+0x82>
+ 324:	cb 01       	movw	r24, r22
+ 326:	80 95       	com	r24
+ 328:	84 23       	and	r24, r20
+ 32a:	88 bb       	out	0x18, r24	; 24
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 32c:	80 e0       	ldi	r24, 0x00	; 0
+ 32e:	08 95       	ret
+			} else {
+			PORTB &= ~(1 << pin_num);
+		}
+		break;
+	case C:
+		if (value) {
+ 330:	44 23       	and	r20, r20
+ 332:	71 f0       	breq	.+28     	; 0x350 <Dio_Write_pin+0xb6>
+			PORTC |= (1 << pin_num);
+ 334:	45 b3       	in	r20, 0x15	; 21
+ 336:	21 e0       	ldi	r18, 0x01	; 1
+ 338:	30 e0       	ldi	r19, 0x00	; 0
+ 33a:	b9 01       	movw	r22, r18
+ 33c:	02 c0       	rjmp	.+4      	; 0x342 <Dio_Write_pin+0xa8>
+ 33e:	66 0f       	add	r22, r22
+ 340:	77 1f       	adc	r23, r23
+ 342:	8a 95       	dec	r24
+ 344:	e2 f7       	brpl	.-8      	; 0x33e <Dio_Write_pin+0xa4>
+ 346:	cb 01       	movw	r24, r22
+ 348:	84 2b       	or	r24, r20
+ 34a:	85 bb       	out	0x15, r24	; 21
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 34c:	80 e0       	ldi	r24, 0x00	; 0
+ 34e:	08 95       	ret
+		break;
+	case C:
+		if (value) {
+			PORTC |= (1 << pin_num);
+			} else {
+			PORTC &= ~(1 << pin_num);
+ 350:	45 b3       	in	r20, 0x15	; 21
+ 352:	21 e0       	ldi	r18, 0x01	; 1
+ 354:	30 e0       	ldi	r19, 0x00	; 0
+ 356:	b9 01       	movw	r22, r18
+ 358:	02 c0       	rjmp	.+4      	; 0x35e <Dio_Write_pin+0xc4>
+ 35a:	66 0f       	add	r22, r22
+ 35c:	77 1f       	adc	r23, r23
+ 35e:	8a 95       	dec	r24
+ 360:	e2 f7       	brpl	.-8      	; 0x35a <Dio_Write_pin+0xc0>
+ 362:	cb 01       	movw	r24, r22
+ 364:	80 95       	com	r24
+ 366:	84 23       	and	r24, r20
+ 368:	85 bb       	out	0x15, r24	; 21
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 36a:	80 e0       	ldi	r24, 0x00	; 0
+ 36c:	08 95       	ret
+			} else {
+			PORTC &= ~(1 << pin_num);
+		}
+		break;
+	case D:
+		if (value) {
+ 36e:	44 23       	and	r20, r20
+ 370:	71 f0       	breq	.+28     	; 0x38e <Dio_Write_pin+0xf4>
+			PORTC |= (1 << pin_num);
+ 372:	45 b3       	in	r20, 0x15	; 21
+ 374:	21 e0       	ldi	r18, 0x01	; 1
+ 376:	30 e0       	ldi	r19, 0x00	; 0
+ 378:	b9 01       	movw	r22, r18
+ 37a:	02 c0       	rjmp	.+4      	; 0x380 <Dio_Write_pin+0xe6>
+ 37c:	66 0f       	add	r22, r22
+ 37e:	77 1f       	adc	r23, r23
+ 380:	8a 95       	dec	r24
+ 382:	e2 f7       	brpl	.-8      	; 0x37c <Dio_Write_pin+0xe2>
+ 384:	cb 01       	movw	r24, r22
+ 386:	84 2b       	or	r24, r20
+ 388:	85 bb       	out	0x15, r24	; 21
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 38a:	80 e0       	ldi	r24, 0x00	; 0
+ 38c:	08 95       	ret
+		break;
+	case D:
+		if (value) {
+			PORTC |= (1 << pin_num);
+			} else {
+			PORTC &= ~(1 << pin_num);
+ 38e:	45 b3       	in	r20, 0x15	; 21
+ 390:	21 e0       	ldi	r18, 0x01	; 1
+ 392:	30 e0       	ldi	r19, 0x00	; 0
+ 394:	b9 01       	movw	r22, r18
+ 396:	02 c0       	rjmp	.+4      	; 0x39c <Dio_Write_pin+0x102>
+ 398:	66 0f       	add	r22, r22
+ 39a:	77 1f       	adc	r23, r23
+ 39c:	8a 95       	dec	r24
+ 39e:	e2 f7       	brpl	.-8      	; 0x398 <Dio_Write_pin+0xfe>
+ 3a0:	cb 01       	movw	r24, r22
+ 3a2:	80 95       	com	r24
+ 3a4:	84 23       	and	r24, r20
+ 3a6:	85 bb       	out	0x15, r24	; 21
+		}
+		break;
+	default:
+		return ERROR;					
+	}
+	return SUCCESS;
+ 3a8:	80 e0       	ldi	r24, 0x00	; 0
+ 3aa:	08 95       	ret
+}
+/* change the status of a specific pin */
+bool Dio_Write_pin(Pin_type pin_num, Port_t port_name, Data_t value) {
+	/* check for error input */
+	if (pin_num < 0 || pin_num > 7) {
+		return ERROR;
+ 3ac:	81 e0       	ldi	r24, 0x01	; 1
+ 3ae:	08 95       	ret
+			} else {
+			PORTC &= ~(1 << pin_num);
+		}
+		break;
+	default:
+		return ERROR;					
+ 3b0:	81 e0       	ldi	r24, 0x01	; 1
+	}
+	return SUCCESS;
+}
+ 3b2:	08 95       	ret
+
+000003b4 <Dio_Read_port>:
+/* read the data from a specific port */
+bool Dio_Read_port(Port_t port_name, Data_t* location) {
+	
+	switch (port_name) {
+ 3b4:	81 30       	cpi	r24, 0x01	; 1
+ 3b6:	59 f0       	breq	.+22     	; 0x3ce <Dio_Read_port+0x1a>
+ 3b8:	28 f0       	brcs	.+10     	; 0x3c4 <Dio_Read_port+0x10>
+ 3ba:	82 30       	cpi	r24, 0x02	; 2
+ 3bc:	69 f0       	breq	.+26     	; 0x3d8 <Dio_Read_port+0x24>
+ 3be:	83 30       	cpi	r24, 0x03	; 3
+ 3c0:	81 f0       	breq	.+32     	; 0x3e2 <Dio_Read_port+0x2e>
+ 3c2:	14 c0       	rjmp	.+40     	; 0x3ec <Dio_Read_port+0x38>
+	case A:
+		*location = PINA;
+ 3c4:	89 b3       	in	r24, 0x19	; 25
+ 3c6:	fb 01       	movw	r30, r22
+ 3c8:	80 83       	st	Z, r24
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 3ca:	80 e0       	ldi	r24, 0x00	; 0
+bool Dio_Read_port(Port_t port_name, Data_t* location) {
+	
+	switch (port_name) {
+	case A:
+		*location = PINA;
+		break;
+ 3cc:	08 95       	ret
+	case B:
+		*location = PINB;
+ 3ce:	86 b3       	in	r24, 0x16	; 22
+ 3d0:	fb 01       	movw	r30, r22
+ 3d2:	80 83       	st	Z, r24
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 3d4:	80 e0       	ldi	r24, 0x00	; 0
+	case A:
+		*location = PINA;
+		break;
+	case B:
+		*location = PINB;
+		break;
+ 3d6:	08 95       	ret
+	case C:
+		*location = PINC;
+ 3d8:	83 b3       	in	r24, 0x13	; 19
+ 3da:	fb 01       	movw	r30, r22
+ 3dc:	80 83       	st	Z, r24
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 3de:	80 e0       	ldi	r24, 0x00	; 0
+	case B:
+		*location = PINB;
+		break;
+	case C:
+		*location = PINC;
+		break;
+ 3e0:	08 95       	ret
+	case D:
+		*location = PIND;
+ 3e2:	80 b3       	in	r24, 0x10	; 16
+ 3e4:	fb 01       	movw	r30, r22
+ 3e6:	80 83       	st	Z, r24
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 3e8:	80 e0       	ldi	r24, 0x00	; 0
+	case C:
+		*location = PINC;
+		break;
+	case D:
+		*location = PIND;
+		break;
+ 3ea:	08 95       	ret
+	default:
+		return ERROR;
+ 3ec:	81 e0       	ldi	r24, 0x01	; 1
+	}
+	
+	return SUCCESS;	
+}
+ 3ee:	08 95       	ret
+
+000003f0 <Dio_Write_port>:
+/* change the value of a specific port */
+bool Dio_Write_port(Port_t port_name, Data_t value) {
+	if (value < 0 || value > 255) {
+		return ERROR;
+	}
+	switch (port_name) {
+ 3f0:	81 30       	cpi	r24, 0x01	; 1
+ 3f2:	49 f0       	breq	.+18     	; 0x406 <__LOCK_REGION_LENGTH__+0x6>
+ 3f4:	28 f0       	brcs	.+10     	; 0x400 <__LOCK_REGION_LENGTH__>
+ 3f6:	82 30       	cpi	r24, 0x02	; 2
+ 3f8:	49 f0       	breq	.+18     	; 0x40c <__LOCK_REGION_LENGTH__+0xc>
+ 3fa:	83 30       	cpi	r24, 0x03	; 3
+ 3fc:	51 f0       	breq	.+20     	; 0x412 <__LOCK_REGION_LENGTH__+0x12>
+ 3fe:	0c c0       	rjmp	.+24     	; 0x418 <__LOCK_REGION_LENGTH__+0x18>
+	case A:
+		PORTA = value;
+ 400:	6b bb       	out	0x1b, r22	; 27
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 402:	80 e0       	ldi	r24, 0x00	; 0
+		return ERROR;
+	}
+	switch (port_name) {
+	case A:
+		PORTA = value;
+		break;
+ 404:	08 95       	ret
+	case B:
+		PORTB = value;
+ 406:	68 bb       	out	0x18, r22	; 24
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 408:	80 e0       	ldi	r24, 0x00	; 0
+	case A:
+		PORTA = value;
+		break;
+	case B:
+		PORTB = value;
+		break;
+ 40a:	08 95       	ret
+	case C:
+		PORTC = value;
+ 40c:	65 bb       	out	0x15, r22	; 21
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 40e:	80 e0       	ldi	r24, 0x00	; 0
+	case B:
+		PORTB = value;
+		break;
+	case C:
+		PORTC = value;
+		break;
+ 410:	08 95       	ret
+	case D:
+		PORTD = value;
+ 412:	62 bb       	out	0x12, r22	; 18
+		break;
+	default:
+		return ERROR;
+	}
+	
+	return SUCCESS;	
+ 414:	80 e0       	ldi	r24, 0x00	; 0
+	case C:
+		PORTC = value;
+		break;
+	case D:
+		PORTD = value;
+		break;
+ 416:	08 95       	ret
+	default:
+		return ERROR;
+ 418:	81 e0       	ldi	r24, 0x01	; 1
+	}
+	
+	return SUCCESS;	
+}
+ 41a:	08 95       	ret
+
+0000041c <main>:
+#include "Dio_Config.h"
+
+extern Dio_Config_t default_configuration; 
+
+int main(void)
+{
+ 41c:	cf 93       	push	r28
+ 41e:	df 93       	push	r29
+ 420:	1f 92       	push	r1
+ 422:	cd b7       	in	r28, 0x3d	; 61
+ 424:	de b7       	in	r29, 0x3e	; 62
+	uint8 data;
+	bool status;
+	
+	Dio_init(&default_configuration);
+ 426:	80 e6       	ldi	r24, 0x60	; 96
+ 428:	90 e0       	ldi	r25, 0x00	; 0
+ 42a:	0e 94 41 00 	call	0x82	; 0x82 <Dio_init>
+	
+    while (1) {
+		Dio_Read_pin(1, A, &data);
+ 42e:	ae 01       	movw	r20, r28
+ 430:	4f 5f       	subi	r20, 0xFF	; 255
+ 432:	5f 4f       	sbci	r21, 0xFF	; 255
+ 434:	60 e0       	ldi	r22, 0x00	; 0
+ 436:	81 e0       	ldi	r24, 0x01	; 1
+ 438:	0e 94 e5 00 	call	0x1ca	; 0x1ca <Dio_Read_pin>
+		status = Dio_Write_pin(2, B, data);
+ 43c:	49 81       	ldd	r20, Y+1	; 0x01
+ 43e:	61 e0       	ldi	r22, 0x01	; 1
+ 440:	82 e0       	ldi	r24, 0x02	; 2
+ 442:	0e 94 4d 01 	call	0x29a	; 0x29a <Dio_Write_pin>
+		if (status == ERROR) {
+ 446:	81 30       	cpi	r24, 0x01	; 1
+ 448:	09 f4       	brne	.+2      	; 0x44c <main+0x30>
+			SET_BIT(PORTB, 6);
+ 44a:	c6 9a       	sbi	0x18, 6	; 24
+		}
+		Dio_Read_port(D, &data);
+ 44c:	be 01       	movw	r22, r28
+ 44e:	6f 5f       	subi	r22, 0xFF	; 255
+ 450:	7f 4f       	sbci	r23, 0xFF	; 255
+ 452:	83 e0       	ldi	r24, 0x03	; 3
+ 454:	0e 94 da 01 	call	0x3b4	; 0x3b4 <Dio_Read_port>
+		Dio_Write_port(C, data);
+ 458:	69 81       	ldd	r22, Y+1	; 0x01
+ 45a:	82 e0       	ldi	r24, 0x02	; 2
+ 45c:	0e 94 f8 01 	call	0x3f0	; 0x3f0 <Dio_Write_port>
+ 460:	8b e7       	ldi	r24, 0x7B	; 123
+ 462:	9c e2       	ldi	r25, 0x2C	; 44
+ 464:	a1 e0       	ldi	r26, 0x01	; 1
+ 466:	b0 e0       	ldi	r27, 0x00	; 0
+		DELAY_MS(1000);
+ 468:	00 00       	nop
+ 46a:	01 97       	sbiw	r24, 0x01	; 1
+ 46c:	a1 09       	sbc	r26, r1
+ 46e:	b1 09       	sbc	r27, r1
+ 470:	d9 f7       	brne	.-10     	; 0x468 <main+0x4c>
+		Dio_Write_port(C, 0x00);
+ 472:	60 e0       	ldi	r22, 0x00	; 0
+ 474:	82 e0       	ldi	r24, 0x02	; 2
+ 476:	0e 94 f8 01 	call	0x3f0	; 0x3f0 <Dio_Write_port>
+ 47a:	8b e7       	ldi	r24, 0x7B	; 123
+ 47c:	9c e2       	ldi	r25, 0x2C	; 44
+ 47e:	a1 e0       	ldi	r26, 0x01	; 1
+ 480:	b0 e0       	ldi	r27, 0x00	; 0
+		DELAY_MS(1000);
+ 482:	00 00       	nop
+ 484:	01 97       	sbiw	r24, 0x01	; 1
+ 486:	a1 09       	sbc	r26, r1
+ 488:	b1 09       	sbc	r27, r1
+ 48a:	d9 f7       	brne	.-10     	; 0x482 <main+0x66>
+ 48c:	d0 cf       	rjmp	.-96     	; 0x42e <main+0x12>
+
+0000048e <_exit>:
+ 48e:	f8 94       	cli
+
+00000490 <__stop_program>:
+ 490:	ff cf       	rjmp	.-2      	; 0x490 <__stop_program>

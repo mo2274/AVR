@@ -1,0 +1,330 @@
+
+I2C_MultiMaster_Master1.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .text         00000182  00000000  00000000  00000074  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  1 .data         0000001c  00800060  00000182  000001f6  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  2 .comment      00000030  00000000  00000000  00000212  2**0
+                  CONTENTS, READONLY
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000244  2**2
+                  CONTENTS, READONLY
+  4 .debug_aranges 00000088  00000000  00000000  00000280  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  5 .debug_info   00000cb0  00000000  00000000  00000308  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_abbrev 0000076e  00000000  00000000  00000fb8  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_line   0000078d  00000000  00000000  00001726  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_frame  000000b4  00000000  00000000  00001eb4  2**2
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    000004f2  00000000  00000000  00001f68  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 10 .debug_loc    00000b9f  00000000  00000000  0000245a  2**0
+                  CONTENTS, READONLY, DEBUGGING
+ 11 .debug_ranges 00000068  00000000  00000000  00002ff9  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 2a 00 	jmp	0x54	; 0x54 <__ctors_end>
+   4:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   8:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+   c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  10:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  14:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  18:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  1c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  20:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  24:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  28:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  2c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  30:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  34:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  38:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  3c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  40:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  44:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  48:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  4c:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+  50:	0c 94 3f 00 	jmp	0x7e	; 0x7e <__bad_interrupt>
+
+00000054 <__ctors_end>:
+  54:	11 24       	eor	r1, r1
+  56:	1f be       	out	0x3f, r1	; 63
+  58:	cf e5       	ldi	r28, 0x5F	; 95
+  5a:	d8 e0       	ldi	r29, 0x08	; 8
+  5c:	de bf       	out	0x3e, r29	; 62
+  5e:	cd bf       	out	0x3d, r28	; 61
+
+00000060 <__do_copy_data>:
+  60:	10 e0       	ldi	r17, 0x00	; 0
+  62:	a0 e6       	ldi	r26, 0x60	; 96
+  64:	b0 e0       	ldi	r27, 0x00	; 0
+  66:	e2 e8       	ldi	r30, 0x82	; 130
+  68:	f1 e0       	ldi	r31, 0x01	; 1
+  6a:	02 c0       	rjmp	.+4      	; 0x70 <__do_copy_data+0x10>
+  6c:	05 90       	lpm	r0, Z+
+  6e:	0d 92       	st	X+, r0
+  70:	ac 37       	cpi	r26, 0x7C	; 124
+  72:	b1 07       	cpc	r27, r17
+  74:	d9 f7       	brne	.-10     	; 0x6c <__do_copy_data+0xc>
+  76:	0e 94 70 00 	call	0xe0	; 0xe0 <main>
+  7a:	0c 94 bf 00 	jmp	0x17e	; 0x17e <_exit>
+
+0000007e <__bad_interrupt>:
+  7e:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+00000082 <Dio_init>:
+#include "Dio.h"
+
+extern Dio_Config_t Dio_configuration;
+	
+/* initialization function */	
+bool Dio_init(void) {	
+  82:	cf 93       	push	r28
+  84:	df 93       	push	r29
+  86:	e0 e6       	ldi	r30, 0x60	; 96
+  88:	f0 e0       	ldi	r31, 0x00	; 0
+  8a:	2b e7       	ldi	r18, 0x7B	; 123
+  8c:	30 e0       	ldi	r19, 0x00	; 0
+				} else {
+				status = ERROR;
+				return status;
+			}
+			} else if (Dio_configuration.port_config[i].direction == OUTPUT) {
+			*(Dio_configuration.port_config[i].ddr) = 0xFF;
+  8e:	9f ef       	ldi	r25, 0xFF	; 255
+			return status;
+		}
+	}
+	/* configuration of ports */
+	for (int i = 0; i < NUM_OF_PORTS; i++) {
+		if (Dio_configuration.port_config[i].direction == INPUT) {
+  90:	80 81       	ld	r24, Z
+  92:	81 11       	cpse	r24, r1
+  94:	10 c0       	rjmp	.+32     	; 0xb6 <Dio_init+0x34>
+			*(Dio_configuration.port_config[i].ddr) = 0x00;
+  96:	c3 81       	ldd	r28, Z+3	; 0x03
+  98:	d4 81       	ldd	r29, Z+4	; 0x04
+  9a:	18 82       	st	Y, r1
+			if (Dio_configuration.port_config[i].pull_up == PULL_UP) {
+  9c:	81 81       	ldd	r24, Z+1	; 0x01
+  9e:	81 11       	cpse	r24, r1
+  a0:	04 c0       	rjmp	.+8      	; 0xaa <Dio_init+0x28>
+				*(Dio_configuration.port_config[i].port) = 0xFF;
+  a2:	a5 81       	ldd	r26, Z+5	; 0x05
+  a4:	b6 81       	ldd	r27, Z+6	; 0x06
+  a6:	9c 93       	st	X, r25
+  a8:	0f c0       	rjmp	.+30     	; 0xc8 <Dio_init+0x46>
+				} else if (Dio_configuration.port_config[i].pull_up == NO_PULL_UP) {
+  aa:	81 30       	cpi	r24, 0x01	; 1
+  ac:	99 f4       	brne	.+38     	; 0xd4 <Dio_init+0x52>
+				*(Dio_configuration.port_config[i].port) = 0x00;
+  ae:	a5 81       	ldd	r26, Z+5	; 0x05
+  b0:	b6 81       	ldd	r27, Z+6	; 0x06
+  b2:	1c 92       	st	X, r1
+  b4:	09 c0       	rjmp	.+18     	; 0xc8 <Dio_init+0x46>
+				} else {
+				status = ERROR;
+				return status;
+			}
+			} else if (Dio_configuration.port_config[i].direction == OUTPUT) {
+  b6:	81 30       	cpi	r24, 0x01	; 1
+  b8:	79 f4       	brne	.+30     	; 0xd8 <Dio_init+0x56>
+			*(Dio_configuration.port_config[i].ddr) = 0xFF;
+  ba:	c3 81       	ldd	r28, Z+3	; 0x03
+  bc:	d4 81       	ldd	r29, Z+4	; 0x04
+  be:	98 83       	st	Y, r25
+			*(Dio_configuration.port_config[i].port) = Dio_configuration.port_config[i].init_value;
+  c0:	c5 81       	ldd	r28, Z+5	; 0x05
+  c2:	d6 81       	ldd	r29, Z+6	; 0x06
+  c4:	82 81       	ldd	r24, Z+2	; 0x02
+  c6:	88 83       	st	Y, r24
+  c8:	39 96       	adiw	r30, 0x09	; 9
+			status = ERROR;
+			return status;
+		}
+	}
+	/* configuration of ports */
+	for (int i = 0; i < NUM_OF_PORTS; i++) {
+  ca:	e2 17       	cp	r30, r18
+  cc:	f3 07       	cpc	r31, r19
+  ce:	01 f7       	brne	.-64     	; 0x90 <Dio_init+0xe>
+			} else {
+			status = ERROR;
+			return status;
+		}		
+	}		
+	return status;
+  d0:	80 e0       	ldi	r24, 0x00	; 0
+  d2:	03 c0       	rjmp	.+6      	; 0xda <Dio_init+0x58>
+				*(Dio_configuration.port_config[i].port) = 0xFF;
+				} else if (Dio_configuration.port_config[i].pull_up == NO_PULL_UP) {
+				*(Dio_configuration.port_config[i].port) = 0x00;
+				} else {
+				status = ERROR;
+				return status;
+  d4:	81 e0       	ldi	r24, 0x01	; 1
+  d6:	01 c0       	rjmp	.+2      	; 0xda <Dio_init+0x58>
+			} else if (Dio_configuration.port_config[i].direction == OUTPUT) {
+			*(Dio_configuration.port_config[i].ddr) = 0xFF;
+			*(Dio_configuration.port_config[i].port) = Dio_configuration.port_config[i].init_value;
+			} else {
+			status = ERROR;
+			return status;
+  d8:	81 e0       	ldi	r24, 0x01	; 1
+		}		
+	}		
+	return status;
+}
+  da:	df 91       	pop	r29
+  dc:	cf 91       	pop	r28
+  de:	08 95       	ret
+
+000000e0 <main>:
+#include <util/delay.h>
+
+
+int main(void)
+{	
+	Dio_init();
+  e0:	0e 94 41 00 	call	0x82	; 0x82 <Dio_init>
+	#else
+		//round up by default
+		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+	#endif
+
+	__builtin_avr_delay_cycles(__ticks_dc);
+  e4:	86 ea       	ldi	r24, 0xA6	; 166
+  e6:	8a 95       	dec	r24
+  e8:	f1 f7       	brne	.-4      	; 0xe6 <main+0x6>
+  ea:	00 c0       	rjmp	.+0      	; 0xec <main+0xc>
+	uint8 data = 9;	
+	_delay_us(500);
+	// adjust bit rate
+	TWBR = 2; // 50k bit per second
+  ec:	82 e0       	ldi	r24, 0x02	; 2
+  ee:	80 b9       	out	0x00, r24	; 0
+	// start bit
+	SET_BIT(TWCR, 2);
+  f0:	86 b7       	in	r24, 0x36	; 54
+  f2:	84 60       	ori	r24, 0x04	; 4
+  f4:	86 bf       	out	0x36, r24	; 54
+	SET_BIT(TWCR, 5);
+  f6:	86 b7       	in	r24, 0x36	; 54
+  f8:	80 62       	ori	r24, 0x20	; 32
+  fa:	86 bf       	out	0x36, r24	; 54
+	SET_BIT(TWCR, 7);
+  fc:	86 b7       	in	r24, 0x36	; 54
+  fe:	80 68       	ori	r24, 0x80	; 128
+ 100:	86 bf       	out	0x36, r24	; 54
+	
+	while (GET_BIT(TWCR, 7) == 0);
+ 102:	06 b6       	in	r0, 0x36	; 54
+ 104:	07 fe       	sbrs	r0, 7
+ 106:	fd cf       	rjmp	.-6      	; 0x102 <main+0x22>
+	if ((TWSR & 0xF8) == 0x08) {
+ 108:	81 b1       	in	r24, 0x01	; 1
+ 10a:	88 7f       	andi	r24, 0xF8	; 248
+ 10c:	88 30       	cpi	r24, 0x08	; 8
+ 10e:	11 f4       	brne	.+4      	; 0x114 <main+0x34>
+		SET_BIT(PORTA, 0);
+ 110:	d8 9a       	sbi	0x1b, 0	; 27
+ 112:	01 c0       	rjmp	.+2      	; 0x116 <main+0x36>
+	} else {
+		SET_BIT(PORTB, 0);
+ 114:	c0 9a       	sbi	0x18, 0	; 24
+	}
+	
+	// SLA + R  0b0011001 0
+	TWDR = 0b00110010;
+ 116:	82 e3       	ldi	r24, 0x32	; 50
+ 118:	83 b9       	out	0x03, r24	; 3
+	// clear start bit
+	CLR_BIT(TWCR, 5);
+ 11a:	86 b7       	in	r24, 0x36	; 54
+ 11c:	8f 7d       	andi	r24, 0xDF	; 223
+ 11e:	86 bf       	out	0x36, r24	; 54
+	// clear flag and enable	
+	SET_BIT(TWCR, 7);
+ 120:	86 b7       	in	r24, 0x36	; 54
+ 122:	80 68       	ori	r24, 0x80	; 128
+ 124:	86 bf       	out	0x36, r24	; 54
+	SET_BIT(TWCR, 2);
+ 126:	86 b7       	in	r24, 0x36	; 54
+ 128:	84 60       	ori	r24, 0x04	; 4
+ 12a:	86 bf       	out	0x36, r24	; 54
+	while (GET_BIT(TWCR, 7) == 0);
+ 12c:	06 b6       	in	r0, 0x36	; 54
+ 12e:	07 fe       	sbrs	r0, 7
+ 130:	fd cf       	rjmp	.-6      	; 0x12c <main+0x4c>
+	if ((TWSR & 0xF8) == 0x18) {
+ 132:	81 b1       	in	r24, 0x01	; 1
+ 134:	88 7f       	andi	r24, 0xF8	; 248
+ 136:	88 31       	cpi	r24, 0x18	; 24
+ 138:	11 f4       	brne	.+4      	; 0x13e <main+0x5e>
+		SET_BIT(PORTA, 1);
+ 13a:	d9 9a       	sbi	0x1b, 1	; 27
+ 13c:	07 c0       	rjmp	.+14     	; 0x14c <main+0x6c>
+	} else  {
+		SET_BIT(PORTD, 1);
+ 13e:	91 9a       	sbi	0x12, 1	; 18
+		// Stop bit
+		SET_BIT(TWCR, 4);
+ 140:	86 b7       	in	r24, 0x36	; 54
+ 142:	80 61       	ori	r24, 0x10	; 16
+ 144:	86 bf       	out	0x36, r24	; 54
+		SET_BIT(TWCR, 7);		
+ 146:	86 b7       	in	r24, 0x36	; 54
+ 148:	80 68       	ori	r24, 0x80	; 128
+ 14a:	86 bf       	out	0x36, r24	; 54
+	}	
+	// Data
+	TWDR = data;
+ 14c:	89 e0       	ldi	r24, 0x09	; 9
+ 14e:	83 b9       	out	0x03, r24	; 3
+	SET_BIT(TWCR, 7);
+ 150:	86 b7       	in	r24, 0x36	; 54
+ 152:	80 68       	ori	r24, 0x80	; 128
+ 154:	86 bf       	out	0x36, r24	; 54
+	SET_BIT(TWCR, 2);
+ 156:	86 b7       	in	r24, 0x36	; 54
+ 158:	84 60       	ori	r24, 0x04	; 4
+ 15a:	86 bf       	out	0x36, r24	; 54
+	while (GET_BIT(TWCR, 7) == 0);
+ 15c:	06 b6       	in	r0, 0x36	; 54
+ 15e:	07 fe       	sbrs	r0, 7
+ 160:	fd cf       	rjmp	.-6      	; 0x15c <main+0x7c>
+	if ((TWSR & 0xF8) == 0x30) {
+ 162:	81 b1       	in	r24, 0x01	; 1
+ 164:	88 7f       	andi	r24, 0xF8	; 248
+ 166:	80 33       	cpi	r24, 0x30	; 48
+ 168:	11 f4       	brne	.+4      	; 0x16e <main+0x8e>
+		SET_BIT(PORTA, 2);
+ 16a:	da 9a       	sbi	0x1b, 2	; 27
+ 16c:	01 c0       	rjmp	.+2      	; 0x170 <main+0x90>
+	} else {
+		SET_BIT(PORTB, 2);
+ 16e:	c2 9a       	sbi	0x18, 2	; 24
+	}
+	// Stop bit
+	SET_BIT(TWCR, 4);
+ 170:	86 b7       	in	r24, 0x36	; 54
+ 172:	80 61       	ori	r24, 0x10	; 16
+ 174:	86 bf       	out	0x36, r24	; 54
+	SET_BIT(TWCR, 7);
+ 176:	86 b7       	in	r24, 0x36	; 54
+ 178:	80 68       	ori	r24, 0x80	; 128
+ 17a:	86 bf       	out	0x36, r24	; 54
+ 17c:	ff cf       	rjmp	.-2      	; 0x17c <main+0x9c>
+
+0000017e <_exit>:
+ 17e:	f8 94       	cli
+
+00000180 <__stop_program>:
+ 180:	ff cf       	rjmp	.-2      	; 0x180 <__stop_program>
